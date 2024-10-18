@@ -2,20 +2,15 @@ package com.suresh.go2event.model;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.Set;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Table(name = "events")
 @Entity
-@JsonIgnoreProperties({"users","hibernateLazyInitializer","handler"})
+@JsonIgnoreProperties({"tickets","hibernateLazyInitializer","handler"})
 public class Event {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,16 +26,15 @@ public class Event {
 	private Time time;
 	private Time duration;
 
-	@ManyToMany(mappedBy="events")
-	private Set<User> users;
-	
+	@OneToMany
+	private List<Ticket> tickets;
 
-	public Set<User> getUsers() {
-		return users;
+	public List<Ticket> getTickets() {
+		return tickets;
 	}
 
-	public void setUsers(Set<User> users) {
-		this.users = users;
+	public void setTickets(List<Ticket> tickets) {
+		this.tickets = tickets;
 	}
 
 	public long getId() {

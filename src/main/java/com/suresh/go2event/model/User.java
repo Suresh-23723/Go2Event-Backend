@@ -1,14 +1,9 @@
 package com.suresh.go2event.model;
 
 
-import java.util.Set;
+import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Table(name = "users")
 @Entity
@@ -22,15 +17,15 @@ public class User {
 	private String email;
 	private String password;
 	
-	@ManyToMany
-	private Set<Event> events;
+	@OneToMany
+	private List<Ticket> tickets;
 
-	public Set<Event> getEvents() {
-		return events;
+	public List<Ticket> getTickets() {
+		return tickets;
 	}
 
-	public void setEvents(Set<Event> events) {
-		this.events = events;
+	public void setTickets(List<Ticket> tickets) {
+		this.tickets = tickets;
 	}
 
 	public Long getId() {

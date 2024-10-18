@@ -35,11 +35,5 @@ public class EventController {
 	public List<Event> getAllEvents() {
 		return eventRepository.findAll();
 	}
-	
-	@GetMapping("/{id}/getUsers")
-	public Set<User> getEventById(@PathVariable Long id) {
-		Event event = eventRepository.findById(id).orElse(null);
-		return event.getUsers();
-	}
-	
+
 }

@@ -3,6 +3,10 @@ package com.suresh.go2event.controller;
 import java.util.List;
 
 
+import com.suresh.go2event.model.Ticket;
+import com.suresh.go2event.respository.TicketRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,11 +28,9 @@ import com.suresh.go2event.respository.UserRepository;
 public class UserController {
 
 	final private UserRepository userRepository;
-	final private EventRepository eventRepository;
 
-	public UserController(UserRepository userRepository,EventRepository eventRepository) {
+	public UserController(UserRepository userRepository) {
 		this.userRepository = userRepository;
-		this.eventRepository = eventRepository;
 	}
 	
 	@PostMapping("/new")
@@ -52,30 +54,13 @@ public class UserController {
 		return userRepository.findById(id).orElse(null);
 	}
 	
-	@PutMapping("/{user_id}/addEvent/{event_id}")
-	public User addEventToUser(@PathVariable Long user_id,@PathVariable Long event_id) {
+	@GetMapping("/{user_id}/tickets")
+	public ResponseEntity<Object> getAllTickets(@PathVariable Long user_id) {
 		User user = userRepository.findById(user_id).orElse(null);
-		Event event = eventRepository.findById(event_id).orElse(null);
-		if((user != null && event != null) && !user.getEvents().contains(event)) {
-			user.getEvents().add(event);
-			event.setAvailableSeats(event.getAvailableSeats() - 1);
-			userRepository.save(user);
-			eventRepository.save(event);
+		if(user == null) {
+			return new ResponseEntity<>("User Not Found",HttpStatus.BAD_REQUEST);
 		}
-		return user;
-	}
-	
-	@PutMapping("/{user_id}/cancelEvent/{event_id}")
-	public User removeEventToUser(@PathVariable Long user_id,@PathVariable Long event_id) {
-		User user = userRepository.findById(user_id).orElse(null);
-		Event event = eventRepository.findById(event_id).orElse(null);
-		if((user != null && event != null) && user.getEvents().contains(event)) {
-			user.getEvents().remove(event);
-			event.setAvailableSeats(event.getAvailableSeats() + 1);
-			userRepository.save(user);
-			eventRepository.save(event);
-		}
-		return user;
+		return new ResponseEntity<>(user.getTickets(), HttpStatus.OK);
 	}
 	
 	@PutMapping("/{user_id}/update")
@@ -85,7 +70,6 @@ public class UserController {
 			user.setEmail(newUser.getEmail());
 			user.setName(newUser.getName());
 			user.setPassword(newUser.getPassword());
-			user.setEvents(newUser.getEvents());
 			userRepository.save(user);
 			return newUser;
 		}
