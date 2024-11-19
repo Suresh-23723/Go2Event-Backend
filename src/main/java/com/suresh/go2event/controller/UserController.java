@@ -5,17 +5,10 @@ import java.util.List;
 
 import com.suresh.go2event.model.Ticket;
 import com.suresh.go2event.respository.TicketRepository;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.suresh.go2event.model.Event;
 import com.suresh.go2event.model.User;
@@ -62,17 +55,17 @@ public class UserController {
 		}
 		return new ResponseEntity<>(user.getTickets(), HttpStatus.OK);
 	}
-	
+
 	@PutMapping("/{user_id}/update")
-	public User updateUser(@PathVariable Long user_id,@RequestBody User newUser) {
+	public ResponseEntity<Object> updateUser(@PathVariable Long user_id,@RequestBody User newUser) {
 		User user = userRepository.findById(user_id).orElse(null);
 		if (user != null) {
 			user.setEmail(newUser.getEmail());
 			user.setName(newUser.getName());
 			user.setPassword(newUser.getPassword());
 			userRepository.save(user);
-			return newUser;
+			return new ResponseEntity<>(user,HttpStatus.OK);
 		}
-		return newUser;
+		return new ResponseEntity<>("User Not Found",HttpStatus.BAD_REQUEST);
 	}
 }

@@ -33,17 +33,32 @@ public class TicketController {
             return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
         }
         if(event == null) {
-            return new ResponseEntity<>("Event not found",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Event not found", HttpStatus.BAD_REQUEST);
         }
         ticket.setUser(user);
         ticket.setEvent(event);
         ticketRepository.save(ticket);
         user.getTickets().add(ticket);
         event.getTickets().add(ticket);
+        event.setAvailableSeats(event.getAvailableSeats() - ticket.getNumberOfSeats());
         userRepository.save(user);
         eventRepository.save(event);
 
-        return new ResponseEntity<>(ticket, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{ticket_id}")
+    public User deleteTicket(@PathVariable Long ticket_id) {
+        Ticket ticket = ticketRepository.findById(ticket_id).orElse(null);
+        User user = ticket.getUser();
+        Event event = ticket.getEvent();
+        event.setAvailableSeats(event.getAvailableSeats() + ticket.getNumberOfSeats());
+        user.getTickets().remove(ticket);
+        event.getTickets().remove(ticket);
+        userRepository.save(user);
+        eventRepository.save(event);
+        ticketRepository.delete(ticket);
+        return user;
     }
 
 }

@@ -18,8 +18,8 @@ public class Ticket {
     @ManyToOne
     private Event event;
     private int numberOfSeats;
-    private Date purchasedDate;
-    private Time purchasedTime;
+    private Date purchaseDate;
+    private Time purchaseTime;
     private double amountPaid;
 
     public long getId() {
@@ -54,20 +54,20 @@ public class Ticket {
         this.numberOfSeats = numberOfSeats;
     }
 
-    public Date getPurchasedDate() {
-        return purchasedDate;
+    public Date getPurchaseDate() {
+        return purchaseDate;
     }
 
-    public void setPurchasedDate(Date purchasedDate) {
-        this.purchasedDate = purchasedDate;
+    public void setPurchaseDate(Date purchaseDate) {
+        this.purchaseDate = purchaseDate;
     }
 
-    public Time getPurchasedTime() {
-        return purchasedTime;
+    public Time getPurchaseTime() {
+        return purchaseTime;
     }
 
-    public void setPurchasedTime(Time purchasedTime) {
-        this.purchasedTime = purchasedTime;
+    public void setPurchaseTime(Time purchaseTime) {
+        this.purchaseTime = purchaseTime;
     }
 
     public double getAmountPaid() {
